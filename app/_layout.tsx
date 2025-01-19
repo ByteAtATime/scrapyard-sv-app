@@ -62,7 +62,20 @@ export default function RootLayout() {
             ? DARK_THEME.colors.text
             : LIGHT_THEME.colors.text,
         }}
-      />
+      >
+        <Stack.Screen
+          name="(app)/config"
+          options={{
+            title: "Server Configuration",
+          }}
+        />
+        <Stack.Screen
+          name="(app)/award-points"
+          options={{
+            title: "Award Points",
+          }}
+        />
+      </Stack>
     </ThemeProvider>
   );
 }
