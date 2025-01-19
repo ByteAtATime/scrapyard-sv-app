@@ -6,13 +6,15 @@ import {
   DefaultTheme,
   DarkTheme,
 } from "@react-navigation/native";
-import { Stack } from "expo-router";
+import { ClerkProvider } from "@clerk/clerk-expo";
+import { Slot, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
 import { Platform } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
+import { tokenCache, publishableKey } from "~/lib/clerk";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -50,36 +52,15 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-      <Stack
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: isDarkColorScheme
-              ? DARK_THEME.colors.card
-              : LIGHT_THEME.colors.card,
-          },
-          headerTintColor: isDarkColorScheme
-            ? DARK_THEME.colors.text
-            : LIGHT_THEME.colors.text,
-        }}
-      >
-        <Stack.Screen
-          name="(app)/config"
-          options={{
-            title: "Server Configuration",
-          }}
-        />
-        <Stack.Screen
-          name="(app)/award-points"
-          options={{
-            title: "Award Points",
-          }}
-        />
-      </Stack>
-
-      <PortalHost />
-    </ThemeProvider>
+    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+        <>
+          <Slot />
+          <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+          <PortalHost />
+        </>
+      </ThemeProvider>
+    </ClerkProvider>
   );
 }
 
