@@ -11,3 +11,31 @@ export interface UserIdentificationMethod {
     disabled?: boolean;
   }>;
 }
+
+export interface UserResponse {
+  points: {
+    total: number;
+    history: Array<{
+      points: number;
+      reason: string;
+      author: {
+        id: string;
+        name: string;
+        role: string;
+      };
+      timestamp: Date;
+    }>;
+  };
+  attendance: Array<{
+    event: {
+      id: number;
+      name: string;
+      description: string;
+      startTime: Date;
+      endTime: Date;
+      type: "workshop" | "meal" | "activity";
+    };
+    attended: boolean;
+    checkInTime?: Date;
+  }>;
+}

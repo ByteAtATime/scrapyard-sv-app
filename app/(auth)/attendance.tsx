@@ -8,17 +8,22 @@ import { UserSelector } from "~/components/user/UserSelector";
 import { EventSelector } from "~/components/events/EventSelector";
 import { NfcIdentification } from "~/lib/user/methods/nfc";
 import { SearchIdentification } from "~/lib/user/methods/search";
-import { getServerUrl } from "~/lib/api/config";
 import type { User } from "~/lib/user/types";
 import type { Event } from "~/lib/events/types";
+import { useEvents, markAttendance } from "~/lib/api/swr";
 
 export default function AttendanceScreen() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const {
+    events,
+    isLoading: eventsLoading,
+    isError: eventsError,
+  } = useEvents();
 
-  const markAttendance = async () => {
+  const handleMarkAttendance = async () => {
     if (!selectedUser || !selectedEvent) {
       Alert.alert("Error", "Please select both a user and an event");
       return;
@@ -26,42 +31,21 @@ export default function AttendanceScreen() {
 
     try {
       setLoading(true);
-      const serverUrl = await getServerUrl();
-
-      if (!serverUrl) {
-        Alert.alert("Error", "Please configure server URL first");
-        router.push("/config");
-        return;
-      }
-
-      const response = await fetch(`${serverUrl}/api/v1/attendance/mark`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: selectedUser.id,
-          eventId: selectedEvent.id,
-        }),
+      await markAttendance({
+        userId: selectedUser.id,
+        eventId: selectedEvent.id,
       });
 
-      const body = await response.json();
+      Alert.alert(
+        "Success",
+        `Marked attendance for ${selectedUser.name} at ${selectedEvent.name}`
+      );
 
-      if (!response.ok || body.error) {
-        throw new Error(body.error || "Failed to mark attendance");
-      }
-
-      Alert.alert("Success", "Attendance marked successfully");
-      // Reset form
+      // Reset selections
       setSelectedUser(null);
       setSelectedEvent(null);
     } catch (error) {
-      Alert.alert(
-        "Error",
-        error instanceof Error
-          ? error.message
-          : "Unknown error (failed to mark attendance)"
-      );
+      Alert.alert("Error", "Failed to mark attendance");
       console.error(error);
     } finally {
       setLoading(false);
@@ -69,37 +53,47 @@ export default function AttendanceScreen() {
   };
 
   return (
-    <View className="flex-1 p-4 bg-background">
-      <Stack.Screen
-        options={{
-          title: "Mark Attendance",
-        }}
-      />
+    <View className="flex-1 p-4">
+      <Stack.Screen options={{ title: "Mark Attendance" }} />
 
-      <Card>
+      <Card className="mb-4">
         <CardHeader>
-          <CardTitle>Mark Attendance</CardTitle>
+          <CardTitle>Select User</CardTitle>
         </CardHeader>
-        <CardContent className="gap-4">
+        <CardContent>
           <UserSelector
             value={selectedUser}
             onChange={setSelectedUser}
             methods={[NfcIdentification, SearchIdentification]}
           />
-
-          <EventSelector value={selectedEvent} onChange={setSelectedEvent} />
-
-          <Button
-            onPress={markAttendance}
-            disabled={loading || !selectedUser || !selectedEvent}
-            className="mt-2"
-          >
-            <Text className="text-primary-foreground">
-              {loading ? "Marking Attendance..." : "Mark Attendance"}
-            </Text>
-          </Button>
         </CardContent>
       </Card>
+
+      <Card className="mb-4">
+        <CardHeader>
+          <CardTitle>Select Event</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {eventsLoading ? (
+            <Text>Loading events...</Text>
+          ) : eventsError ? (
+            <Text className="text-red-500">Error loading events</Text>
+          ) : (
+            <EventSelector
+              events={events || []}
+              value={selectedEvent}
+              onChange={setSelectedEvent}
+            />
+          )}
+        </CardContent>
+      </Card>
+
+      <Button
+        onPress={handleMarkAttendance}
+        disabled={loading || !selectedUser || !selectedEvent}
+      >
+        {loading ? "Marking attendance..." : "Mark Attendance"}
+      </Button>
     </View>
   );
 }
