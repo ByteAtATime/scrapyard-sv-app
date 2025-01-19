@@ -40,7 +40,7 @@ function SearchButton({
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline" className="flex-1 flex-row items-baseline">
+          <Button variant="outline" className="flex-1 flex-row items-center">
             <Search className="mr-2 text-muted-foreground" size={20} />
             <Text style={{ lineHeight: 18 }}>Search Users</Text>
           </Button>

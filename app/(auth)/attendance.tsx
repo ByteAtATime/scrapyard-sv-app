@@ -92,7 +92,7 @@ export default function AttendanceScreen() {
         onPress={handleMarkAttendance}
         disabled={loading || !selectedUser || !selectedEvent}
       >
-        {loading ? "Marking attendance..." : "Mark Attendance"}
+        <Text>{loading ? "Marking attendance..." : "Mark Attendance"}</Text>
       </Button>
     </View>
   );

@@ -106,7 +106,7 @@ export default function AwardPointsScreen() {
           loading || !selectedUser || !formData.amount || !formData.reason
         }
       >
-        {loading ? "Awarding..." : `Award ${CONFIG.POINTS_NAME}`}
+        <Text>{loading ? "Awarding..." : `Award ${CONFIG.POINTS_NAME}`}</Text>
       </Button>
     </View>
   );

@@ -3,8 +3,22 @@ import { getServerUrl } from "./config";
 import type { User, UserResponse } from "~/lib/user/types";
 import type { Event } from "~/lib/events/types";
 
-const fetcher = async (url: string) => {
-  const response = await fetch(url);
+// TODO: Replace with Clerk auth when ready
+const getAuthHeaders = async () => ({
+  "x-user-id": "admin1",
+});
+
+const fetcher = async (path: string) => {
+  const serverUrl = await getServerUrl();
+  if (!serverUrl) {
+    throw new Error("Server URL not configured");
+  }
+
+  const headers = await getAuthHeaders();
+  const response = await fetch(`${serverUrl}${path}`, {
+    headers,
+  });
+
   if (!response.ok) {
     throw new Error("Failed to fetch data");
   }
@@ -13,7 +27,7 @@ const fetcher = async (url: string) => {
 
 export function useUserData(user: User | null) {
   const { data, error, isLoading, mutate } = useSWR<UserResponse>(
-    user ? `${getServerUrl()}/api/users/${user.id}` : null,
+    user ? `/api/v1/users/${user.id}` : null,
     fetcher
   );
 
@@ -26,10 +40,7 @@ export function useUserData(user: User | null) {
 }
 
 export function useEvents() {
-  const { data, error, isLoading } = useSWR<Event[]>(
-    `${getServerUrl()}/api/v1/events`,
-    fetcher
-  );
+  const { data, error, isLoading } = useSWR<Event[]>(`/api/v1/events`, fetcher);
 
   return {
     events: data,
@@ -45,10 +56,16 @@ export async function awardPoints(payload: {
   metadata?: object;
 }) {
   const serverUrl = await getServerUrl();
+  if (!serverUrl) {
+    throw new Error("Server URL not configured");
+  }
+
+  const headers = await getAuthHeaders();
   const response = await fetch(`${serverUrl}/api/v1/points/award`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...headers,
     },
     body: JSON.stringify(payload),
   });
@@ -58,7 +75,7 @@ export async function awardPoints(payload: {
   }
 
   // Invalidate user data cache
-  await mutate(`${serverUrl}/api/users/${payload.userId}`);
+  await mutate(`/api/v1/users/${payload.userId}`);
   return response.json();
 }
 
@@ -67,10 +84,16 @@ export async function markAttendance(payload: {
   eventId: string;
 }) {
   const serverUrl = await getServerUrl();
+  if (!serverUrl) {
+    throw new Error("Server URL not configured");
+  }
+
+  const headers = await getAuthHeaders();
   const response = await fetch(`${serverUrl}/api/v1/attendance/mark`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...headers,
     },
     body: JSON.stringify(payload),
   });
@@ -80,7 +103,7 @@ export async function markAttendance(payload: {
   }
 
   // Invalidate user data cache
-  await mutate(`${serverUrl}/api/users/${payload.userId}`);
+  await mutate(`/api/v1/users/${payload.userId}`);
   return response.json();
 }
 
