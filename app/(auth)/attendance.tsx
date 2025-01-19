@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Alert } from "react-native";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -70,6 +70,12 @@ export default function AttendanceScreen() {
 
   return (
     <View className="flex-1 p-4 bg-background">
+      <Stack.Screen
+        options={{
+          title: "Mark Attendance",
+        }}
+      />
+
       <Card>
         <CardHeader>
           <CardTitle>Mark Attendance</CardTitle>

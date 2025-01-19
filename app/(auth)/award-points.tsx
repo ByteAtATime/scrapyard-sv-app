@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Alert } from "react-native";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
@@ -80,6 +80,12 @@ export default function AwardPointsScreen() {
 
   return (
     <View className="flex-1 p-4 bg-background">
+      <Stack.Screen
+        options={{
+          title: "Award Points",
+        }}
+      />
+
       <Card>
         <CardHeader>
           <CardTitle>Award Points</CardTitle>

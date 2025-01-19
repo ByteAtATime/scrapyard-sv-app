@@ -41,8 +41,8 @@ function NfcButton({
       onPress={handlePress}
       disabled={disabled}
     >
-      <SmartphoneNfc className="!w-2 !h-2 mr-2 text-muted-foreground" />
-      <Text>Scan NFC Card</Text>
+      <SmartphoneNfc className="mr-2 text-muted-foreground" size={20} />
+      <Text style={{ lineHeight: 18 }}>Scan NFC Card</Text>
     </Button>
   );
 }

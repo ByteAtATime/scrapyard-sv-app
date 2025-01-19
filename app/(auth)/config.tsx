@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 
 const SERVER_URL_KEY = "@server_url";
 
@@ -43,6 +43,12 @@ export default function ConfigScreen() {
 
   return (
     <View className="flex-1 p-4 bg-white">
+      <Stack.Screen
+        options={{
+          title: "Server Configuration",
+        }}
+      />
+
       <Text className="text-lg mb-2">Server Configuration</Text>
       <TextInput
         className="border border-gray-300 rounded-md p-2 mb-4"

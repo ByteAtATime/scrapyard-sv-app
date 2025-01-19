@@ -1,7 +1,8 @@
 import { useAuth } from "@clerk/clerk-expo";
 import { Redirect, Stack, useRouter } from "expo-router";
-import { ActivityIndicator, View, Pressable, Text } from "react-native";
-
+import { ActivityIndicator, View } from "react-native";
+import { Button } from "~/components/ui/button";
+import { Text } from "~/components/ui/text";
 export default function AuthLayout() {
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const router = useRouter();
@@ -32,14 +33,9 @@ export default function AuthLayout() {
       screenOptions={{
         headerShown: true,
         headerRight: () => (
-          <Pressable
-            onPress={handleSignOut}
-            className="mr-4 bg-destructive px-3 py-1.5 rounded-md"
-          >
-            <Text className="text-destructive-foreground font-medium">
-              Sign Out
-            </Text>
-          </Pressable>
+          <Button onPress={handleSignOut} variant="outline" size="sm">
+            <Text>Sign Out</Text>
+          </Button>
         ),
       }}
     />

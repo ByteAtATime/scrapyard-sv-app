@@ -3,6 +3,7 @@ import { View, ScrollView, TouchableOpacity } from "react-native";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -35,7 +36,7 @@ export function EventSelector({ value, onChange }: Props) {
       </Text>
 
       {value ? (
-        <View className="flex-row items-center justify-between p-2 border border-border rounded-md">
+        <View className="flex-row items-center justify-between px-4 py-2 border border-border rounded-md">
           <View>
             <Text className="font-medium">{value.name}</Text>
             <Text className="text-sm text-muted-foreground">
@@ -61,6 +62,9 @@ export function EventSelector({ value, onChange }: Props) {
           <DialogContent className="w-full">
             <DialogHeader>
               <DialogTitle>Select Event</DialogTitle>
+              <DialogDescription>
+                Please select an event below.
+              </DialogDescription>
             </DialogHeader>
             <Input
               placeholder="Search events..."

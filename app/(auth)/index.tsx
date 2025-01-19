@@ -1,8 +1,7 @@
 import React from "react";
-import { View, ScrollView } from "react-native";
-import { useRouter } from "expo-router";
+import { View, ScrollView, Pressable } from "react-native";
+import { Stack, useRouter } from "expo-router";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { ArrowRight } from "~/lib/icons/ArrowRight";
 import { Gift } from "~/lib/icons/Gift";
@@ -53,34 +52,44 @@ export default function Index() {
 
   return (
     <ScrollView className="flex-1 bg-background p-4">
-      <Text className="text-2xl font-bold mb-4">Hackathon Manager</Text>
+      <Stack.Screen
+        options={{
+          title: "Home",
+        }}
+      />
+
       <View className="gap-4">
         {actions.map((action) => (
-          <Card key={action.route}>
-            <CardContent className="flex-row items-center p-4 gap-4">
-              <action.icon className="h-6 w-6 text-muted-foreground" />
+          <Pressable
+            key={action.route}
+            onPress={() =>
+              !action.comingSoon && router.push(action.route as any)
+            }
+            disabled={action.comingSoon}
+            accessibilityRole="button"
+            accessibilityLabel={action.title}
+            accessibilityHint={action.description}
+            style={({ pressed }) => [pressed && { opacity: 0.7 }]}
+          >
+            <Card>
+              <CardContent className="flex-row items-center p-4 gap-4">
+                <action.icon className="h-6 w-6 text-muted-foreground" />
 
-              <View className="flex-1">
-                <Text className="text-lg font-semibold">{action.title}</Text>
-                <Text className="text-sm text-muted-foreground">
-                  {action.description}
-                </Text>
-                {action.comingSoon && (
-                  <Text className="text-xs text-blue-500 mt-1">
-                    Coming Soon
+                <View className="flex-1">
+                  <Text className="text-lg font-semibold">{action.title}</Text>
+                  <Text className="text-sm text-muted-foreground">
+                    {action.description}
                   </Text>
-                )}
-              </View>
-              <Button
-                variant="outline"
-                size="icon"
-                onPress={() => router.push(action.route as any)}
-                disabled={action.comingSoon}
-              >
+                  {action.comingSoon && (
+                    <Text className="text-xs text-blue-500 mt-1">
+                      Coming Soon
+                    </Text>
+                  )}
+                </View>
                 <ArrowRight className="h-4 w-4 text-black" />
-              </Button>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Pressable>
         ))}
       </View>
     </ScrollView>
