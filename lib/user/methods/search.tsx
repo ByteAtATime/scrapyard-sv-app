@@ -17,7 +17,7 @@ import {
 import { Input } from "~/components/ui/input";
 
 const MOCK_USERS: User[] = [
-  { id: "1", name: "John Doe" },
+  { id: "user1", name: "John Doe" },
   { id: "2", name: "Jane Smith" },
   { id: "3", name: "Bob Johnson" },
   { id: "4", name: "Alice Brown" },

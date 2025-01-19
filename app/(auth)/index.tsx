@@ -30,6 +30,13 @@ export default function Index() {
       comingSoon: false,
     },
     {
+      title: "User Information",
+      description: "View user points and attendance history",
+      icon: Users,
+      route: "/user-info",
+      comingSoon: false,
+    },
+    {
       title: "Meal Tracking",
       description: "Track meal claims",
       icon: Utensils,
