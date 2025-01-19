@@ -6,6 +6,10 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { getServerUrl } from "~/lib/api/config";
+import { UserSelector } from "~/components/user/UserSelector";
+import { NfcIdentification } from "~/lib/user/methods/nfc";
+import { SearchIdentification } from "~/lib/user/methods/search";
+import type { User } from "~/lib/user/types";
 
 type AwardPointsPayload = {
   userId: string;
@@ -17,13 +21,18 @@ type AwardPointsPayload = {
 export default function AwardPointsScreen() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<AwardPointsPayload>({
-    userId: "",
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [formData, setFormData] = useState({
     amount: 0,
     reason: "",
   });
 
   const awardPoints = async () => {
+    if (!selectedUser) {
+      Alert.alert("Error", "Please select a user first");
+      return;
+    }
+
     try {
       setLoading(true);
       const serverUrl = await getServerUrl();
@@ -34,12 +43,18 @@ export default function AwardPointsScreen() {
         return;
       }
 
+      const payload = {
+        userId: selectedUser.id,
+        amount: formData.amount,
+        reason: formData.reason,
+      };
+
       const response = await fetch(`${serverUrl}/api/v1/points/award`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const body = await response.json();
@@ -49,7 +64,7 @@ export default function AwardPointsScreen() {
       }
 
       Alert.alert("Success", "Points awarded successfully");
-      setFormData({ userId: "", amount: 0, reason: "" });
+      setFormData({ amount: 0, reason: "" });
     } catch (error) {
       Alert.alert(
         "Error",
@@ -70,16 +85,11 @@ export default function AwardPointsScreen() {
           <CardTitle>Award Points</CardTitle>
         </CardHeader>
         <CardContent className="gap-4">
-          <View className="gap-1.5">
-            <Text className="text-sm text-foreground font-medium">User ID</Text>
-            <Input
-              placeholder="Enter user ID"
-              value={formData.userId}
-              onChangeText={(text) =>
-                setFormData({ ...formData, userId: text })
-              }
-            />
-          </View>
+          <UserSelector
+            value={selectedUser}
+            onChange={setSelectedUser}
+            methods={[NfcIdentification, SearchIdentification]}
+          />
 
           <View className="gap-1.5">
             <Text className="text-sm text-foreground font-medium">Points</Text>

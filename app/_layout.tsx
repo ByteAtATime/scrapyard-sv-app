@@ -12,6 +12,7 @@ import * as React from "react";
 import { Platform } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { PortalHost } from "@rn-primitives/portal";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -76,6 +77,8 @@ export default function RootLayout() {
           }}
         />
       </Stack>
+
+      <PortalHost />
     </ThemeProvider>
   );
 }
