@@ -27,7 +27,7 @@ export default function Index() {
       description: "Record participant attendance",
       icon: Users,
       route: "/attendance",
-      comingSoon: true,
+      comingSoon: false,
     },
     {
       title: "Meal Tracking",
