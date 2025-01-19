@@ -9,14 +9,15 @@ import { Users } from "~/lib/icons/Users";
 import { Utensils } from "~/lib/icons/Utensils";
 import { Settings } from "~/lib/icons/Settings";
 import { Map } from "~/lib/icons/Map";
+import { CONFIG } from "~/lib/config";
 
 export default function Index() {
   const router = useRouter();
 
   const actions = [
     {
-      title: "Award Points",
-      description: "Give points to participants",
+      title: `Award ${CONFIG.POINTS_NAME}`,
+      description: `Give ${CONFIG.POINTS_NAME.toLowerCase()} to participants`,
       icon: Gift,
       route: "/award-points",
       comingSoon: false,

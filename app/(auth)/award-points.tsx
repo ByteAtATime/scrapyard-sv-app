@@ -10,6 +10,7 @@ import { UserSelector } from "~/components/user/UserSelector";
 import { NfcIdentification } from "~/lib/user/methods/nfc";
 import { SearchIdentification } from "~/lib/user/methods/search";
 import type { User } from "~/lib/user/types";
+import { CONFIG } from "~/lib/config";
 
 type AwardPointsPayload = {
   userId: string;
@@ -60,17 +61,19 @@ export default function AwardPointsScreen() {
       const body = await response.json();
 
       if (!response.ok || body.error) {
-        throw new Error(body.error || "Failed to award points");
+        throw new Error(
+          body.error || `Failed to award ${CONFIG.POINTS_NAME.toLowerCase()}`
+        );
       }
 
-      Alert.alert("Success", "Points awarded successfully");
+      Alert.alert("Success", `${CONFIG.POINTS_NAME} awarded successfully`);
       setFormData({ amount: 0, reason: "" });
     } catch (error) {
       Alert.alert(
         "Error",
         error instanceof Error
           ? error.message
-          : "Unknown error (failed to award points)"
+          : `Unknown error (failed to award ${CONFIG.POINTS_NAME.toLowerCase()})`
       );
       console.error(error);
     } finally {
@@ -82,13 +85,13 @@ export default function AwardPointsScreen() {
     <View className="flex-1 p-4 bg-background">
       <Stack.Screen
         options={{
-          title: "Award Points",
+          title: `Award ${CONFIG.POINTS_NAME}`,
         }}
       />
 
       <Card>
         <CardHeader>
-          <CardTitle>Award Points</CardTitle>
+          <CardTitle>Award {CONFIG.POINTS_NAME}</CardTitle>
         </CardHeader>
         <CardContent className="gap-4">
           <UserSelector
@@ -98,9 +101,11 @@ export default function AwardPointsScreen() {
           />
 
           <View className="gap-1.5">
-            <Text className="text-sm text-foreground font-medium">Points</Text>
+            <Text className="text-sm text-foreground font-medium">
+              {CONFIG.POINTS_NAME}
+            </Text>
             <Input
-              placeholder="Enter points amount"
+              placeholder={`Enter ${CONFIG.POINTS_NAME.toLowerCase()} amount`}
               keyboardType="numeric"
               value={formData.amount.toString()}
               onChangeText={(text) =>
@@ -122,7 +127,9 @@ export default function AwardPointsScreen() {
 
           <Button onPress={awardPoints} disabled={loading} className="mt-2">
             <Text className="text-primary-foreground">
-              {loading ? "Awarding Points..." : "Award Points"}
+              {loading
+                ? `Awarding ${CONFIG.POINTS_NAME}...`
+                : `Award ${CONFIG.POINTS_NAME}`}
             </Text>
           </Button>
         </CardContent>

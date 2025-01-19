@@ -1,4 +1,5 @@
 import { Stack } from "expo-router";
+import { CONFIG } from "~/lib/config";
 
 export default function AppLayout() {
   return (
@@ -18,7 +19,7 @@ export default function AppLayout() {
       <Stack.Screen
         name="award-points"
         options={{
-          title: "Award Points",
+          title: `Award ${CONFIG.POINTS_NAME}`,
         }}
       />
     </Stack>

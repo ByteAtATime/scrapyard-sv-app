@@ -5,6 +5,7 @@ import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import { View } from "react-native";
 import * as Linking from "expo-linking";
+import { CONFIG } from "~/lib/config";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -30,7 +31,9 @@ export default function SignIn() {
 
   return (
     <View className="flex-1 items-center justify-center p-4">
-      <Text className="text-2xl font-bold mb-8">Welcome to Scrapyard</Text>
+      <Text className="text-2xl font-bold mb-8">
+        Welcome to {CONFIG.APP_NAME}
+      </Text>
       <Button onPress={onSignInPress}>
         <Text className="text-primary-foreground font-medium">
           Sign in with Google
