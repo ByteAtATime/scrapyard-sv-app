@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "scrapyard-sv-app",
-    "slug": "scrapyard-sv-app",
+    "slug": "scrapyard-sv",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -9,13 +9,15 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "dev.byteatatime.scrapyardsv"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "dev.byteatatime.scrapyardsv"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +38,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "1badc243-f9da-456b-a8b6-c8eba3f23e38"
+      }
+    },
+    "owner": "byteatatime"
   }
 }
