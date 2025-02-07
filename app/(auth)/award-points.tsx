@@ -13,7 +13,6 @@ import { CONFIG } from "~/lib/config";
 import { awardPoints } from "~/lib/api/swr";
 
 export default function AwardPointsScreen() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({

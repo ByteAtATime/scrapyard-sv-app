@@ -6,7 +6,6 @@ import { Stack, useRouter } from "expo-router";
 const SERVER_URL_KEY = "@server_url";
 
 export default function ConfigScreen() {
-  const router = useRouter();
   const [serverUrl, setServerUrl] = useState("");
 
   useEffect(() => {
@@ -19,7 +18,7 @@ export default function ConfigScreen() {
       if (savedUrl) {
         setServerUrl(savedUrl);
       }
-    } catch (error) {
+    } catch {
       Alert.alert("Error", "Failed to load saved server URL");
     }
   };
@@ -36,7 +35,7 @@ export default function ConfigScreen() {
 
       await AsyncStorage.setItem(SERVER_URL_KEY, serverUrl);
       Alert.alert("Success", "Server URL saved successfully");
-    } catch (error) {
+    } catch {
       Alert.alert("Error", "Please enter a valid URL");
     }
   };

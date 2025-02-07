@@ -1,7 +1,7 @@
 import React from "react";
 import { View, ScrollView, Pressable } from "react-native";
 import { Stack, useRouter } from "expo-router";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { ArrowRight } from "~/lib/icons/ArrowRight";
 import { Gift } from "~/lib/icons/Gift";

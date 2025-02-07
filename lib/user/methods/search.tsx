@@ -6,10 +6,8 @@ import type { UserIdentificationMethod, User } from "../types";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,

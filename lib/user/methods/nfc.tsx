@@ -29,7 +29,7 @@ function NfcButton({
         id: userId,
         name: "John Doe",
       });
-    } catch (error) {
+    } catch {
       Alert.alert("Error", "Failed to read NFC tag");
     }
   };

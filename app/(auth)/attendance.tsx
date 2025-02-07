@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Alert } from "react-native";
-import { Stack, useRouter } from "expo-router";
+import { Stack } from "expo-router";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -13,7 +13,6 @@ import type { Event } from "~/lib/events/types";
 import { useEvents, markAttendance } from "~/lib/api/swr";
 
 export default function AttendanceScreen() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
