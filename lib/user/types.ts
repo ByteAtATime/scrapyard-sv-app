@@ -1,6 +1,11 @@
 export interface User {
-  id: string;
+  id: number;
   name: string;
+  email: string;
+  authProvider: string;
+  authProviderId: string;
+  totalPoints: number;
+  isOrganizer: boolean;
 }
 
 export interface UserIdentificationMethod {
@@ -12,30 +17,10 @@ export interface UserIdentificationMethod {
   }>;
 }
 
-export interface UserResponse {
-  points: {
-    total: number;
-    history: Array<{
-      points: number;
-      reason: string;
-      author: {
-        id: string;
-        name: string;
-        role: string;
-      };
-      timestamp: Date;
-    }>;
-  };
-  attendance: Array<{
-    event: {
-      id: number;
-      name: string;
-      description: string;
-      startTime: Date;
-      endTime: Date;
-      type: "workshop" | "meal" | "activity";
-    };
-    attended: boolean;
-    checkInTime?: Date;
-  }>;
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
 }
+
+export type UsersListResponse = ApiResponse<User[]>;
+export type UserResponse = ApiResponse<User>;
