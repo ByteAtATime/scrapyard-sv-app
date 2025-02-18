@@ -10,10 +10,9 @@ import { NfcIdentification } from "~/lib/user/methods/nfc";
 import { SearchIdentification } from "~/lib/user/methods/search";
 import type { User } from "~/lib/user/types";
 import type { Event } from "~/lib/events/types";
-import { useEvents, markAttendance } from "~/lib/api/swr";
+import { useEvents, useMarkAttendance } from "~/lib/api/swr";
 
 export default function AttendanceScreen() {
-  const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const {
@@ -21,6 +20,7 @@ export default function AttendanceScreen() {
     isLoading: eventsLoading,
     isError: eventsError,
   } = useEvents();
+  const { markAttendance, isLoading } = useMarkAttendance();
 
   const handleMarkAttendance = async () => {
     if (!selectedUser || !selectedEvent) {
@@ -29,7 +29,6 @@ export default function AttendanceScreen() {
     }
 
     try {
-      setLoading(true);
       await markAttendance({
         userId: selectedUser.id,
         eventId: selectedEvent.id,
@@ -44,10 +43,11 @@ export default function AttendanceScreen() {
       setSelectedUser(null);
       setSelectedEvent(null);
     } catch (error) {
-      Alert.alert("Error", "Failed to mark attendance");
+      Alert.alert(
+        "Error",
+        error instanceof Error ? error.message : "Failed to mark attendance"
+      );
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -89,9 +89,9 @@ export default function AttendanceScreen() {
 
       <Button
         onPress={handleMarkAttendance}
-        disabled={loading || !selectedUser || !selectedEvent}
+        disabled={isLoading || !selectedUser || !selectedEvent}
       >
-        <Text>{loading ? "Marking attendance..." : "Mark Attendance"}</Text>
+        <Text>{isLoading ? "Marking attendance..." : "Mark Attendance"}</Text>
       </Button>
     </View>
   );

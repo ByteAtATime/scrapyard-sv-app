@@ -1,4 +1,5 @@
 import useSWR, { mutate } from "swr";
+import useSWRMutation from "swr/mutation";
 import { getServerUrl } from "./config";
 import type { User, UserResponse, UsersListResponse } from "~/lib/user/types";
 import type { Event } from "~/lib/events/types";
@@ -19,6 +20,114 @@ const fetcher = async (path: string, headers: HeadersInit) => {
   }
   return response.json();
 };
+
+export function useAwardPoints() {
+  const { getToken } = useAuth();
+
+  const { trigger, isMutating, error } = useSWRMutation(
+    "/api/v1/points/award",
+    async (path: string, { arg: payload }: { arg: any }) => {
+      const serverUrl = await getServerUrl();
+      if (!serverUrl) {
+        throw new Error("Server URL not configured");
+      }
+
+      const token = await getToken();
+      if (!token) {
+        throw new Error("Not authenticated");
+      }
+
+      const response = await fetch(`${serverUrl}${path}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to make request");
+      }
+      const result = await response.json();
+      if (!result?.success) {
+        throw new Error(result?.error || "Failed to award points");
+      }
+      return result;
+    }
+  );
+
+  const awardPoints = async (payload: {
+    userId: number;
+    amount: number;
+    reason: string;
+    metadata?: object;
+  }) => {
+    const result = await trigger(payload);
+    // Invalidate user data cache
+    await mutate(`/api/v1/users/${payload.userId}`);
+    return result;
+  };
+
+  return {
+    awardPoints,
+    isLoading: isMutating,
+    error,
+  };
+}
+
+export function useMarkAttendance() {
+  const { getToken } = useAuth();
+
+  const { trigger, isMutating, error } = useSWRMutation(
+    "/api/v1/attendance/mark",
+    async (path: string, { arg: payload }: { arg: any }) => {
+      const serverUrl = await getServerUrl();
+      if (!serverUrl) {
+        throw new Error("Server URL not configured");
+      }
+
+      const token = await getToken();
+      if (!token) {
+        throw new Error("Not authenticated");
+      }
+
+      const response = await fetch(`${serverUrl}${path}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to make request");
+      }
+      const result = await response.json();
+      if (!result?.success) {
+        throw new Error(result?.error || "Failed to mark attendance");
+      }
+      return result;
+    }
+  );
+
+  const markAttendance = async (payload: {
+    userId: number;
+    eventId: string;
+  }) => {
+    const result = await trigger(payload);
+    // Invalidate user data cache
+    await mutate(`/api/v1/users/${payload.userId}`);
+    return result;
+  };
+
+  return {
+    markAttendance,
+    isLoading: isMutating,
+    error,
+  };
+}
 
 export function useUserData(user: User | null) {
   const { getToken } = useAuth();
@@ -76,66 +185,6 @@ export function useUsers() {
     isLoading,
     isError: error,
   };
-}
-
-export async function awardPoints(payload: {
-  userId: string;
-  amount: number;
-  reason: string;
-  metadata?: object;
-}) {
-  const serverUrl = await getServerUrl();
-  if (!serverUrl) {
-    throw new Error("Server URL not configured");
-  }
-
-  const { getToken } = useAuth();
-  const token = await getToken();
-  const response = await fetch(`${serverUrl}/api/v1/points/award`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to award points");
-  }
-
-  // Invalidate user data cache
-  await mutate(`/api/v1/users/${payload.userId}`);
-  return response.json();
-}
-
-export async function markAttendance(payload: {
-  userId: string;
-  eventId: string;
-}) {
-  const serverUrl = await getServerUrl();
-  if (!serverUrl) {
-    throw new Error("Server URL not configured");
-  }
-
-  const { getToken } = useAuth();
-  const token = await getToken();
-  const response = await fetch(`${serverUrl}/api/v1/attendance/mark`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to mark attendance");
-  }
-
-  // Invalidate user data cache
-  await mutate(`/api/v1/users/${payload.userId}`);
-  return response.json();
 }
 
 // Add more hooks as needed for other API endpoints

@@ -10,15 +10,15 @@ import { NfcIdentification } from "~/lib/user/methods/nfc";
 import { SearchIdentification } from "~/lib/user/methods/search";
 import type { User } from "~/lib/user/types";
 import { CONFIG } from "~/lib/config";
-import { awardPoints } from "~/lib/api/swr";
+import { useAwardPoints } from "~/lib/api/swr";
 
 export default function AwardPointsScreen() {
-  const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({
     amount: 0,
     reason: "",
   });
+  const { awardPoints, isLoading } = useAwardPoints();
 
   const handleAwardPoints = async () => {
     if (!selectedUser) {
@@ -27,7 +27,6 @@ export default function AwardPointsScreen() {
     }
 
     try {
-      setLoading(true);
       await awardPoints({
         userId: selectedUser.id,
         amount: formData.amount,
@@ -43,10 +42,11 @@ export default function AwardPointsScreen() {
       setSelectedUser(null);
       setFormData({ amount: 0, reason: "" });
     } catch (error) {
-      Alert.alert("Error", "Failed to award points");
+      Alert.alert(
+        "Error",
+        error instanceof Error ? error.message : "Failed to award points"
+      );
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -102,10 +102,10 @@ export default function AwardPointsScreen() {
       <Button
         onPress={handleAwardPoints}
         disabled={
-          loading || !selectedUser || !formData.amount || !formData.reason
+          isLoading || !selectedUser || !formData.amount || !formData.reason
         }
       >
-        <Text>{loading ? "Awarding..." : `Award ${CONFIG.POINTS_NAME}`}</Text>
+        <Text>{isLoading ? "Awarding..." : `Award ${CONFIG.POINTS_NAME}`}</Text>
       </Button>
     </View>
   );
