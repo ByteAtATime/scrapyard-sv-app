@@ -1,8 +1,10 @@
 import React from "react";
 import { View } from "react-native";
-import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import type { User, UserIdentificationMethod } from "~/lib/user/types";
+import { UserCard } from "./UserCard";
+import { X } from "~/lib/icons/X";
+import { Button } from "../ui/button";
 
 interface Props {
   value: User | null;
@@ -18,19 +20,15 @@ export function UserSelector({ value, onChange, methods }: Props) {
       </Text>
 
       {value ? (
-        <View className="flex-row items-center justify-between p-2 border border-border rounded-md">
-          <View>
-            <Text className="font-medium">{value.name}</Text>
-            <Text className="text-sm text-muted-foreground">
-              ID: {value.id}
-            </Text>
-          </View>
+        <View className="relative">
+          <UserCard user={value} />
           <Button
-            variant="destructive"
-            size="sm"
             onPress={() => onChange(null)}
+            className="absolute right-6 top-1/2 -translate-y-1/2 -mr-3 h-6 w-6 items-center justify-center rounded-full"
+            size="icon"
+            variant="ghost"
           >
-            <Text>Clear</Text>
+            <X size={14} className="text-muted-foreground" />
           </Button>
         </View>
       ) : (

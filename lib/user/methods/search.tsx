@@ -14,7 +14,7 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Spinner } from "~/components/ui/spinner";
-import { useUsers } from "~/lib/api/swr";
+import { useUsers, useUserData } from "~/lib/api/swr";
 
 function SearchButton({
   onSelect,
@@ -24,11 +24,24 @@ function SearchButton({
   disabled?: boolean;
 }) {
   const [search, setSearch] = useState("");
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { users, isLoading, isError } = useUsers();
+  const { userData, isLoading: isLoadingUser } = useUserData(selectedUser);
+
+  React.useEffect(() => {
+    if (selectedUser && userData?.data) {
+      onSelect(userData.data);
+      setSelectedUser(null);
+    }
+  }, [userData, selectedUser, onSelect]);
 
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleUserSelect = (user: User) => {
+    setSelectedUser(user);
+  };
 
   return (
     <Dialog>
@@ -56,7 +69,7 @@ function SearchButton({
           className="mb-4"
         />
         <ScrollView className="max-h-64">
-          {isLoading ? (
+          {isLoading || isLoadingUser ? (
             <View className="p-4 items-center">
               <Spinner />
             </View>
@@ -72,9 +85,7 @@ function SearchButton({
             filteredUsers.map((user) => (
               <TouchableOpacity
                 key={user.id}
-                onPress={() => {
-                  onSelect(user);
-                }}
+                onPress={() => handleUserSelect(user)}
                 className="p-3 border-b border-border"
               >
                 <Text className="font-medium">{user.name}</Text>
