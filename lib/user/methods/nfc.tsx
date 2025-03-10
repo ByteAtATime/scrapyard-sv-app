@@ -1,9 +1,9 @@
 import React from "react";
-import { Alert } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { SmartphoneNfc } from "~/lib/icons/SmartphoneNfc";
 import type { UserIdentificationMethod, User } from "../types";
+import { toast } from "sonner-native";
 
 // Mock NFC reading for now
 async function readNfcTag(): Promise<string> {
@@ -30,7 +30,7 @@ function NfcButton({
         name: "John Doe",
       });
     } catch {
-      Alert.alert("Error", "Failed to read NFC tag");
+      toast.error("Failed to read NFC tag");
     }
   };
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Alert } from "react-native";
+import { View } from "react-native";
 import { Stack } from "expo-router";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
@@ -11,6 +11,7 @@ import { SearchIdentification } from "~/lib/user/methods/search";
 import type { User } from "~/lib/user/types";
 import type { Event } from "~/lib/events/types";
 import { useEvents, useMarkAttendance } from "~/lib/api/swr";
+import { toast } from "sonner-native";
 
 export default function AttendanceScreen() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -24,7 +25,7 @@ export default function AttendanceScreen() {
 
   const handleMarkAttendance = async () => {
     if (!selectedUser || !selectedEvent) {
-      Alert.alert("Error", "Please select both a user and an event");
+      toast.error("Please select both a user and an event");
       return;
     }
 
@@ -34,8 +35,7 @@ export default function AttendanceScreen() {
         eventId: selectedEvent.id,
       });
 
-      Alert.alert(
-        "Success",
+      toast.success(
         `Marked attendance for ${selectedUser.name} at ${selectedEvent.name}`
       );
 
@@ -43,8 +43,7 @@ export default function AttendanceScreen() {
       setSelectedUser(null);
       setSelectedEvent(null);
     } catch (error) {
-      Alert.alert(
-        "Error",
+      toast.error(
         error instanceof Error ? error.message : "Failed to mark attendance"
       );
       console.error(error);

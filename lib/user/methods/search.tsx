@@ -35,9 +35,10 @@ function SearchButton({
     }
   }, [userData, selectedUser, onSelect]);
 
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredUsers =
+    users?.filter((user) =>
+      user.name.toLowerCase().includes(search.toLowerCase())
+    ) ?? [];
 
   const handleUserSelect = (user: User) => {
     setSelectedUser(user);

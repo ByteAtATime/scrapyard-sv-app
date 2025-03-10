@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Alert } from "react-native";
+import { View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
@@ -11,6 +11,7 @@ import { SearchIdentification } from "~/lib/user/methods/search";
 import type { User } from "~/lib/user/types";
 import { CONFIG } from "~/lib/config";
 import { useAwardPoints } from "~/lib/api/swr";
+import { toast } from "sonner-native";
 
 export default function AwardPointsScreen() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -22,7 +23,7 @@ export default function AwardPointsScreen() {
 
   const handleAwardPoints = async () => {
     if (!selectedUser) {
-      Alert.alert("Error", "Please select a user first");
+      toast.error("Please select a user first");
       return;
     }
 
@@ -33,8 +34,7 @@ export default function AwardPointsScreen() {
         reason: formData.reason,
       });
 
-      Alert.alert(
-        "Success",
+      toast.success(
         `Awarded ${formData.amount} ${CONFIG.POINTS_NAME} to ${selectedUser.name}`
       );
 
@@ -42,8 +42,7 @@ export default function AwardPointsScreen() {
       setSelectedUser(null);
       setFormData({ amount: 0, reason: "" });
     } catch (error) {
-      Alert.alert(
-        "Error",
+      toast.error(
         error instanceof Error ? error.message : "Failed to award points"
       );
       console.error(error);

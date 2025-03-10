@@ -114,7 +114,7 @@ export function useMarkAttendance() {
 
   const markAttendance = async (payload: {
     userId: number;
-    eventId: string;
+    eventId: number;
   }) => {
     const result = await trigger(payload);
     // Invalidate user data cache
@@ -151,18 +151,18 @@ export function useUserData(user: User | null) {
 
 export function useEvents() {
   const { getToken } = useAuth();
-  const { data, error, isLoading } = useSWR<Event[]>(
-    "/api/v1/events",
-    async (path: string) => {
-      const token = await getToken();
-      return fetcher(path, {
-        Authorization: `Bearer ${token}`,
-      });
-    }
-  );
+  const { data, error, isLoading } = useSWR<{
+    data: Event[];
+    success: boolean;
+  }>("/api/v1/events", async (path: string) => {
+    const token = await getToken();
+    return fetcher(path, {
+      Authorization: `Bearer ${token}`,
+    });
+  });
 
   return {
-    events: data,
+    events: data?.data ?? [],
     isLoading,
     isError: error,
   };

@@ -26,7 +26,7 @@ export function EventSelector({ events, value, onChange }: Props) {
   const filteredEvents = events.filter(
     (event) =>
       event.name.toLowerCase().includes(search.toLowerCase()) ||
-      new Date(event.date).toLocaleDateString().includes(search)
+      event.description.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -34,9 +34,7 @@ export function EventSelector({ events, value, onChange }: Props) {
       <DialogTrigger asChild>
         <Button variant="outline" className="flex-1 flex-row items-baseline">
           <Calendar className="mr-2 text-muted-foreground" size={20} />
-          <Text style={{ lineHeight: 18 }}>
-            {value ? value.name : "Select Event"}
-          </Text>
+          <Text>{value ? value.name : "Select Event"}</Text>
         </Button>
       </DialogTrigger>
       <DialogContent className="w-full">
@@ -66,7 +64,7 @@ export function EventSelector({ events, value, onChange }: Props) {
             >
               <Text className="font-medium">{event.name}</Text>
               <Text className="text-sm text-muted-foreground">
-                {new Date(event.date).toLocaleDateString()}
+                {new Date(event.time).toLocaleDateString()}
               </Text>
             </TouchableOpacity>
           ))}

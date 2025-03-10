@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, TextInput, Text, TouchableOpacity, Alert } from "react-native";
+import { View, TextInput, Text, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Stack, useRouter } from "expo-router";
+import { toast } from "sonner-native";
 
 const SERVER_URL_KEY = "@server_url";
 
@@ -19,13 +20,13 @@ export default function ConfigScreen() {
         setServerUrl(savedUrl);
       }
     } catch {
-      Alert.alert("Error", "Failed to load saved server URL");
+      toast.error("Failed to load saved server URL");
     }
   };
 
   const saveServerUrl = async () => {
     if (!serverUrl) {
-      Alert.alert("Error", "Please enter a server URL");
+      toast.error("Please enter a server URL");
       return;
     }
 
@@ -34,9 +35,9 @@ export default function ConfigScreen() {
       new URL(serverUrl);
 
       await AsyncStorage.setItem(SERVER_URL_KEY, serverUrl);
-      Alert.alert("Success", "Server URL saved successfully");
+      toast.success("Server URL saved successfully");
     } catch {
-      Alert.alert("Error", "Please enter a valid URL");
+      toast.error("Please enter a valid URL");
     }
   };
 

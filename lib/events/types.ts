@@ -1,6 +1,8 @@
 export interface Event {
-  id: string;
+  id: number;
   name: string;
-  date: string;
-  // Add other event properties as needed
+  description: string;
+  attendancePoints: number;
+  time: string;
+  contactOrganizer: string | null;
 }
