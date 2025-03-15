@@ -22,6 +22,12 @@ export default function AppLayout() {
           title: `Award ${CONFIG.POINTS_NAME}`,
         }}
       />
+      <Stack.Screen
+        name="check-in"
+        options={{
+          title: "Check-In",
+        }}
+      />
     </Stack>
   );
 }
